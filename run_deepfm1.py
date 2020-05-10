@@ -26,7 +26,7 @@ from keras.optimizers import Adam
 import time
 from keras.preprocessing.sequence import pad_sequences
 
-from dnn.DeepFM import DeepFM1
+from dnn.DeepFM1 import DeepFM1
 from metrics.Metrics import Metrics
 from sklearn.model_selection import train_test_split
 
