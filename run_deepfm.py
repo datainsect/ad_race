@@ -95,20 +95,20 @@ for feature in list_features:
 del X_train
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_train list processed")
 
-## 3.2 process test  data
-model_output = {name: X_test[name].fillna(0).map(lambda x:int(math.log(x+1,2))).astype(np.int16) for name in sparse_features}
-X_test.drop(sparse_features,axis=1,inplace=True)
-print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_test sparse processed")
+# ## 3.2 process test  data
+# model_output = {name: X_test[name].fillna(0).map(lambda x:int(math.log(x+1,2))).astype(np.int16) for name in sparse_features}
+# X_test.drop(sparse_features,axis=1,inplace=True)
+# print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_test sparse processed")
 
-for feature in list_features:
-    feature_list =  list(map(myeval, X_test[feature].values))
-    X_test.drop([feature],axis=1,inplace=True)
-    print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_test "+ feature +" dropped")
-    feature_list = pad_sequences(feature_list, maxlen=features_num_dict[feature+"_len"],dtype='int16')
-    model_output[feature] = feature_list
-    del feature_list
-del X_test
-print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_test list processed")
+# for feature in list_features:
+#     feature_list =  list(map(myeval, X_test[feature].values))
+#     X_test.drop([feature],axis=1,inplace=True)
+#     print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_test "+ feature +" dropped")
+#     feature_list = pad_sequences(feature_list, maxlen=features_num_dict[feature+"_len"],dtype='int16')
+#     model_output[feature] = feature_list
+#     del feature_list
+# del X_test
+# print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_test list processed")
 
 
 ## 4. Define Model, train, predict and evaluate
@@ -125,9 +125,9 @@ K.set_session(sess)
 history = model.fit(model_input, y_train,batch_size=batch_size, epochs=epochs, verbose=2, shuffle=True)
 print(history)
 
-## 4. Save model
-frozen_graph_def = tf.graph_util.convert_variables_to_constants(sess,sess.graph_def,output_node_names=["y_predict/Sigmoid"])
-builder = tf.saved_model.builder.SavedModelBuilder(model_dir)
-builder.add_meta_graph_and_variables(sess,['tecent_race_2020'])
-builder.save()
+# ## 4. Save model
+# frozen_graph_def = tf.graph_util.convert_variables_to_constants(sess,sess.graph_def,output_node_names=["y_predict/Sigmoid"])
+# builder = tf.saved_model.builder.SavedModelBuilder(model_dir)
+# builder.add_meta_graph_and_variables(sess,['tecent_race_2020'])
+# builder.save()
 sess.close()
