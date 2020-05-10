@@ -30,7 +30,7 @@ term = 'time'
 user_time = pd.read_csv(user_time_path)
 user_time[term] = user_time[term].apply(lambda x : list(map(lambda y : int(y%k),eval(str(x)))))
 # user_time[term]= user_time[term].astype(np.int16)
-# user_time = user_time[user_time['user_id']!=839367]
+# user_time = user_time[user_time['user_id']!=839368]
 
 #1.2 creative_id 2481135  4445718
 k = 26713
