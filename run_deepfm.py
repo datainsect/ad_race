@@ -114,6 +114,6 @@ if __name__ == "__main__":
     ## 4. Save model
     frozen_graph_def = tf.graph_util.convert_variables_to_constants(sess,sess.graph_def,output_node_names=["y_predict/Sigmoid"])
     builder = tf.saved_model.builder.SavedModelBuilder(model_dir)
-    builder.add_meta_graph_and_variables(sess,['dnn_zy_ctr_v3'])
+    builder.add_meta_graph_and_variables(sess,['tecent_race_2020'])
     builder.save()
     sess.close()
