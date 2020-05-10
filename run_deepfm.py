@@ -52,24 +52,11 @@ sparse_features = ['dt','net','h_channel','model','appver','hour','province','ci
             'imp_ad_7','ctr_ad_7','dr_ad_7','crid','cid','gid','aid','resolution','industry','sub_industry','is_video','is_app','crid_imp_28','crid_cr_28',
             'crid_dr_28','crid_imp_14','crid_cr_14','crid_dr_14','crid_imp_7','crid_cr_7','crid_dr_7']
 
-list_features = ['app_7','packages','cate_list']
+list_features = ['time', 'creative_id', 'ad_id', 'advertiser_id', 'industry',
+       'product_id', 'product_category']
 
 max_len=101
 
-def split(x,default,sep='#') :
-    if not x or len(str(x))==0 or str(x)=='nan':
-        res = [default]
-    else:
-        key_ans = str(x).split(sep)
-        res = []
-        for key in key_ans:
-            res.append(int(float(key)))
-    return res
-
-if __name__ == "__main__":
-    train_file = sys.argv[1]
-    model_dir = sys.argv[2]
-    h5_path = sys.argv[3]
 
     ## 1. sample train data    
     train = pd.read_csv(train_file,header=None,names=columns)

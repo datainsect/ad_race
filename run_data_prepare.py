@@ -83,3 +83,5 @@ for i in range(1,len(dfs)):
 
 df.to_csv(project+'train/user/user_sequence.csv',index=False)
 
+
+## 2.process test file
