@@ -10,7 +10,7 @@ click_log = pd.read_csv(click_log_path)
 def rmnan(x):
     if not x or len(x)==0:
         return x
-    return x.replace('nan,','').replace(',nan','')
+    return x.replace(' nan,','').replace(', nan','')
 
 #np.int16 (-32768 to 32767）
 
@@ -75,4 +75,6 @@ user_product_category = pd.read_csv(user_product_category_path)
 user_product_category[term] = user_product_category[term].apply(lambda x : list(map(lambda y : int(y%k),list(filter(lambda x:not math.isnan(x),eval(rmnan(str(x))))))))
 # user_product_category[term] = user_product_category[term].astype(np.int16)
 
-df = pd.concat([user_time,user_creative_id,user_ad_id,user_advertiser_id,user_industry,user_product_id,user_product_category],axis=1,keys=['user_id'],join='inner')
+df = pd.concat([user_time,user_creative_id,user_ad_id,user_advertiser_id,user_industry,user_product_id,user_product_category],axis=1)
+
+
