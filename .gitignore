@@ -4,3 +4,4 @@ csvs
 models
 .vscode
 backups
+*.log
