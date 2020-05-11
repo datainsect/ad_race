@@ -124,7 +124,7 @@ model.compile("adam", "binary_crossentropy",metrics=['binary_crossentropy','acc'
 
 sess=tf.Session()
 K.set_session(sess)
-history = model.fit(model_input, y_train,batch_size=batch_size, epochs=epochs, verbose=2, shuffle=True)
+history = model.fit(model_input, y_train,batch_size=batch_size, epochs=epochs, verbose=2, shuffle=True,validation_data=(model_output,y_test))
 print(history)
 
 # ## 4. Save model
