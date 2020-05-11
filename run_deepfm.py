@@ -22,6 +22,7 @@ from tensorflow.python.framework import graph_util
 from keras.backend.tensorflow_backend import set_session
 from keras.optimizers import Adam
 
+
 import time
 from keras.preprocessing.sequence import pad_sequences
 

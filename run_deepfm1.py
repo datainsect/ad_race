@@ -96,10 +96,10 @@ print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_train sparse processed")
 # del X_train
 # print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_train list processed")
 
-# ## 3.2 process test  data
-# model_output = {name: X_test[name].fillna(0).map(lambda x:int(math.log(x+1,2))).astype(np.int16) for name in sparse_features}
-# X_test.drop(sparse_features,axis=1,inplace=True)
-# print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_test sparse processed")
+## 3.2 process test  data
+model_output = {name: X_test[name].fillna(0).map(lambda x:int(math.log(x+1,2))).astype(np.int16) for name in sparse_features}
+X_test.drop(sparse_features,axis=1,inplace=True)
+print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_test sparse processed")
 
 # for feature in list_features:
 #     feature_list =  list(map(myeval, X_test[feature].values))
@@ -123,7 +123,7 @@ model.compile("adam", "binary_crossentropy",metrics=['binary_crossentropy','acc'
 
 sess=tf.Session()
 K.set_session(sess)
-history = model.fit(model_input, y_train,batch_size=batch_size, epochs=epochs, verbose=2, shuffle=True)
+history = model.fit(model_input, y_train,batch_size=batch_size, epochs=epochs, verbose=2, shuffle=True,validation_data=(model_output,y_test))
 print(history)
 
 # ## 4. Save model
