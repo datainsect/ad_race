@@ -54,11 +54,12 @@ class MyMeanPool(Layer):
 
 
 class DeepFM:
-    def __init__(self,cate_features,list_features,features_num_dict,k=10,optimizer=Adam(0.001)):
+    def __init__(self,cate_features,list_features,features_num_dict,k=10,list_k =10*20, optimizer=Adam(0.001)):
         self.cate_features = cate_features
         self.list_features = list_features
         self.features_num_dict = features_num_dict
         self.k=k
+        self.list_k = list_k
         self.optimizer = optimizer
         self.model = self.create_model()
         self.model.summary()
@@ -82,7 +83,7 @@ class DeepFM:
             input = Input(shape=(length,),name=features)
             inputs.append(input)
             mA = Masking(mask_value=0.0)(input)   
-            embed = Embedding(self.features_num_dict[features+"_size"], self.k, input_length=length, trainable=True,mask_zero=True)(mA)
+            embed = Embedding(self.features_num_dict[features+"_size"], self.list_k, input_length=length, trainable=True,mask_zero=True)(mA)
             # x = Embedding(output_dim=self.k, input_dim=self.features_num_dict[features+"_size"], input_length=length,mask_zero=True)(input)
             meanpool = MyMeanPool(axis=1)(embed)
             # auxiliary_output = Dense(1, activation='sigmoid', name='aux_output')(lstm_out)
