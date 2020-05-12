@@ -62,11 +62,15 @@ df = df[df.total_times<=335]
 
 df = df[df.user_id<=900000]
 
+sparse_features = list(df.columns[1:-3])
+
 user = pd.read_csv(train_user_path)
 
 new_df = df[['user_id']+sparse_features]
 
 raw_df = pd.merge(new_df,user,on='user_id')
+
+
 
 ## 2.split train test
 
@@ -116,7 +120,7 @@ print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_test list processed")
 
 ## 4. Define Model, train, predict and evaluate
 
-checkpoint = ModelCheckpoint('models/deepfm3.h5', save_weights_only=False, verbose=1, save_best_only=True)
+checkpoint = ModelCheckpoint('models/deepfm5.h5', save_weights_only=False, verbose=1, save_best_only=True)
 callbacks_list = [checkpoint] 
 
 model = DeepFM2(sparse_features, list_features,features_num_dict).model
@@ -124,4 +128,4 @@ model.compile("adam", "binary_crossentropy",metrics=['binary_crossentropy','acc'
 
 history = model.fit(model_input, y_train,batch_size=batch_size, epochs=epochs, verbose=2, shuffle=True,validation_data=(model_output,y_test),callbacks=callbacks_list)
 
-model.save('models/deepfm3_final.h5')
+model.save('models/deepfm5_final.h5')
