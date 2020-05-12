@@ -5,47 +5,39 @@ from multiprocessing import Process, Manager
 from const import *
 
 
-# test_ad = pd.read_csv(test_ad_path,na_values='\\N')
-# test_click_log = pd.read_csv(test_click_log_path,na_values='\\N')
+test_ad = pd.read_csv(test_ad_path,na_values='\\N')
+test_click_log = pd.read_csv(test_click_log_path,na_values='\\N')
 
-# train_ad = pd.read_csv(train_ad_path,na_values='\\N')
-# train_click_log = pd.read_csv(train_click_log_path,na_values='\\N')
-# train_user = pd.read_csv(train_user_path,na_values='\\N')
-
-
-# train_user_id_max = train_click_log.max()
-
-# click_log = pd.concat([train_click_log,test_click_log])
-
-# ad = pd.concat([train_ad,test_ad])
-
-# ##process click_log added time attribuate
-# click_log['click_times'] = click_log.click_times.apply(lambda x : min(x,4))
-# click_log['weekday'] = click_log.time.apply(lambda x:x%7)
-# click_log['weekend'] = click_log.weekday.apply(lambda x:1 if x<=1 else 0)
-# click_log = pd.merge(click_log, ad, on='creative_id',how='left')
+train_ad = pd.read_csv(train_ad_path,na_values='\\N')
+train_click_log = pd.read_csv(train_click_log_path,na_values='\\N')
+train_user = pd.read_csv(train_user_path,na_values='\\N')
 
 
-# user_ids = click_log[['user_id']]
+train_user_id_max = train_click_log.max()
 
-click_log = pd.read_csv(raw_joined)
+click_log = pd.concat([train_click_log,test_click_log])
 
-user_click_times = click_log.groupby('user_id')['click_times'].sum()
+ad = pd.concat([train_ad,test_ad])
+ad.drop_duplicates( inplace=True)
+
+
+## 0 process data and join ad
+click_log['click_times'] = click_log.click_times.apply(lambda x : min(x,4))
+click_log['weekday'] = click_log.time.apply(lambda x:x%7)
+click_log['weekend'] = click_log.weekday.apply(lambda x:1 if x<=1 else 0)
+click_log = pd.merge(click_log, ad, on='creative_id',how='left')
+
+# click_log = pd.read_csv(raw_joined)
+click_log.to_csv(raw_joined)
+
 
 # Satistics
 
-####1 user_id time
-user_res = []
-columns = []
-key = 'time'
-for i in range(click_log[key].min(),click_log[key].max()+1):
-    user_weekend_clicks = click_log[click_log[key]==i].groupby('user_id')['click_times'].sum()
-    user_res.append(user_weekend_clicks)
-    columns.append(key+"_"+str(i))
+####1 user_click_times 
 
+user_click_times = click_log.groupby('user_id')['click_times'].sum()
 
-user_time = pd.concat(user_res,axis=1)
-user_time.columns = columns
+user_click_times = pd.DataFrame({"user_id":user_click_times.index.values,"total_times":user_click_times.values}).set_index("user_id")
 
 
 ####2 user_id weekend
@@ -106,17 +98,50 @@ user_industry = pd.concat(user_res,axis=1)
 user_industry.columns = columns
 
 
+### process sequence function
+
 def process_df(user_key,user_ids,user_series):
     i=0
-    for user_id, group in user_key.groupby(['user_id']):#首先对原始数据进行groupby
+    for user_id, group in user_key.groupby(['user_id']) : #首先对原始数据进行groupby
         user_ids.append(user_id)
-        user_series.append(list(group.sort_values(by=['time'])[key]))
+        series = list(group.sort_values(by=['time'])[key])
+        if len(series)==0:
+            series = [1]
+        user_series.append(series)
         i+=1
         if i%50000==0:
             print(user_id)
 
 
-## 6 advertiser_id sequence
+## 6 time sequence
+max_size = 92
+worker = 12
+key = 'time'
+user_key = click_log[['user_id',key]]
+user_key = user_key[user_key[key].notna()]
+user_key[key] = user_key[key].apply(lambda x : (x%max_size)).astype(np.int16)
+
+user_key_splited = np.array_split(user_key, worker)
+
+manager =  Manager()
+user_ids = manager.list()
+user_series = manager.list()
+
+processes =[]
+for df in user_key_splited:
+    p = Process(target=process_df, args=(df,user_ids,user_series))
+    p.start()
+    processes.append(p)
+
+
+for p in processes:
+    p.join()
+
+
+user_time = pd.DataFrame({"user_id":list(user_ids),key:list(user_series)}).set_index("user_id")
+
+
+## 7 advertiser_id sequence
 max_size = 26713
 worker = 12
 key = 'advertiser_id'
@@ -139,8 +164,62 @@ for df in user_key_splited:
 for p in processes:
     p.join()
 
-user_advertiser_ids = pd.DataFrame({"index":user_ids,key:user_series})
 
+user_advertiser_ids = pd.DataFrame({"user_id":list(user_ids),key:list(user_series)}).set_index("user_id")
+
+
+## 8 product id sequence
+max_size = 26713
+worker = 12
+key = 'product_id'
+user_key = click_log[['user_id','time',key]]
+user_key = user_key[user_key[key].notna()]
+user_key[key] = user_key[key].apply(lambda x : (x%max_size)+1).astype(np.int16)
+user_key_splited = np.array_split(user_key, worker)
+
+manager =  Manager()
+user_ids = manager.list()
+user_series = manager.list()
+
+processes =[]
+for df in user_key_splited:
+    p = Process(target=process_df, args=(df,user_ids,user_series))
+    p.start()
+    processes.append(p)
+
+
+for p in processes:
+    p.join()
+
+
+user_product_id = pd.DataFrame({"user_id":list(user_ids),key:list(user_series)}).set_index("user_id")
+
+df = user_click_times.join(user_weekend).join(user_weekday).join(user_product_category).join(user_industry).join(user_time).join(user_advertiser_ids).join(user_product_id)
+
+
+
+
+# df.total_times.quantile([0.2,0.5,0.75,0.9,0.95,0.98,0.99])
+# 0.20     28.0
+# 0.50     48.0
+# 0.75     83.0
+# 0.90    137.0
+# 0.95    187.0
+# 0.98    266.0
+# 0.99    335.0
+
+########################  for dnn input
+# 1. filter total times
+
+df = df[df.total_times<=335]
+
+df = df[df.user_id<=900000]
+
+# 2.1 0.9 na threshold 
+
+columns = ['total_times','time','advertiser_id','weekend_0','product_id','weekend_1','product_category_18','weekday_1','weekday_0','weekday_4','weekday_3','weekday_2','weekday_5','weekday_6','industry_6','product_category_2','product_category_5','industry_319','industry_322','industry_247','industry_54','industry_317','product_category_3','industry_297','industry_238','industry_242','industry_73','product_category_12','industry_88','industry_289','product_category_8','industry_60','industry_248','industry_25','product_category_17','industry_326','industry_246','industry_21','industry_291','industry_5','industry_318','industry_47','industry_296','industry_329','industry_36','industry_40','industry_252','industry_27','industry_26','industry_183','industry_203','industry_202','industry_253','product_category_13','industry_321','industry_288','industry_259','industry_205']
+
+new_df = df[columns]
 
 
 # ## 6  :creative_id,ad_id,product_id,advertiser_id
