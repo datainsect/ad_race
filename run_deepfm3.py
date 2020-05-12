@@ -55,6 +55,7 @@ list_features = [ ]
 
 
 ## 1. load raw data
+df = pd.read_csv(raw_processed)
 
 df = df[df.total_times<=335]
 

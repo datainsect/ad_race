@@ -8,7 +8,7 @@ train_click_log_path = 'csvs/train/click_log.csv'
 train_user_path = 'csvs/train/user.csv'
 
 raw_joined = 'csvs/raw_joined.csv'
-raw_processed = 'csvs/user.statistics.csv'
+raw_processed = 'csvs/raw_processed.csv'
 
 
 
