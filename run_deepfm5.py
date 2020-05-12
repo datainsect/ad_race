@@ -28,6 +28,7 @@ from keras.preprocessing.sequence import pad_sequences
 
 from dnn.DeepFM import DeepFM
 from dnn.DeepFM1 import DeepFM1
+from dnn.DeepFM2 import DeepFM2
 from metrics.Metrics import Metrics
 from sklearn.model_selection import train_test_split
 
