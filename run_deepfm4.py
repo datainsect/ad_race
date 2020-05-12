@@ -49,8 +49,8 @@ def myeval(s):
 label = 'gender'
 
 sparse_features = ['total_times','weekend_0','weekend_1','product_category_18','weekday_1','weekday_0','weekday_4','weekday_3','weekday_2','weekday_5','weekday_6','industry_6','product_category_2','product_category_5','industry_319','industry_322','industry_247','industry_54','industry_317','product_category_3','industry_297','industry_238','industry_242','industry_73','product_category_12','industry_88','industry_289','product_category_8','industry_60','industry_248','industry_25','product_category_17','industry_326','industry_246','industry_21','industry_291','industry_5','industry_318','industry_47','industry_296','industry_329','industry_36','industry_40','industry_252','industry_27','industry_26','industry_183','industry_203','industry_202','industry_253','product_category_13','industry_321','industry_288','industry_259','industry_205']
-# list_features = [ 'advertiser_id']
-list_features = [ ]
+list_features = [ 'advertiser_id']
+# list_features = [ ]
 
 
 
@@ -84,13 +84,13 @@ model_input = {name: X_train[name].fillna(0).map(lambda x:int(math.log(x+1,2))).
 X_train.drop(sparse_features,axis=1,inplace=True)
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_train sparse processed")
 
-# for feature in list_features:
-#     feature_list =  list(map(myeval, X_train[feature].values))
-#     X_train.drop([feature],axis=1,inplace=True)
-#     print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_train "+ feature +" dropped")
-#     feature_list = pad_sequences(feature_list, maxlen=features_num_dict[feature+"_len"],dtype='int16')
-#     model_input[feature] = feature_list
-#     del feature_list
+for feature in list_features:
+    feature_list =  list(map(myeval, X_train[feature].values))
+    X_train.drop([feature],axis=1,inplace=True)
+    print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_train "+ feature +" dropped")
+    feature_list = pad_sequences(feature_list, maxlen=features_num_dict[feature+"_len"],dtype='int16')
+    model_input[feature] = feature_list
+    del feature_list
 
 del X_train
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_train list processed")
@@ -100,13 +100,13 @@ model_output = {name: X_test[name].fillna(0).map(lambda x:int(math.log(x+1,2))).
 X_test.drop(sparse_features,axis=1,inplace=True)
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_test sparse processed")
 
-# for feature in list_features:
-#     feature_list =  list(map(myeval, X_test[feature].values))
-#     X_test.drop([feature],axis=1,inplace=True)
-#     print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_test "+ feature +" dropped")
-#     feature_list = pad_sequences(feature_list, maxlen=features_num_dict[feature+"_len"],dtype='int16')
-#     model_output[feature] = feature_list
-#     del feature_list
+for feature in list_features:
+    feature_list =  list(map(myeval, X_test[feature].values))
+    X_test.drop([feature],axis=1,inplace=True)
+    print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_test "+ feature +" dropped")
+    feature_list = pad_sequences(feature_list, maxlen=features_num_dict[feature+"_len"],dtype='int16')
+    model_output[feature] = feature_list
+    del feature_list
 
 
 del X_test
@@ -115,7 +115,7 @@ print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_test list processed")
 
 ## 4. Define Model, train, predict and evaluate
 
-checkpoint = ModelCheckpoint('models/deepfm3.h5', save_weights_only=False, verbose=1, save_best_only=True)
+checkpoint = ModelCheckpoint('models/deepfm4.h5', save_weights_only=False, verbose=1, save_best_only=True)
 callbacks_list = [checkpoint] 
 
 model = DeepFM1(sparse_features, list_features,features_num_dict).model
@@ -123,4 +123,4 @@ model.compile("adam", "binary_crossentropy",metrics=['binary_crossentropy','acc'
 
 history = model.fit(model_input, y_train,batch_size=batch_size, epochs=epochs, verbose=2, shuffle=True,validation_data=(model_output,y_test),callbacks=callbacks_list)
 
-model.save('models/deepfm3_final.h5')
+model.save('models/deepfm4_final.h5')
