@@ -65,13 +65,13 @@ user = pd.read_csv(train_user_path)
 
 sparse_features = list(df.columns[1:-3])
 
-new_df = df[['user_id']+sparse_features]
+new_df = df[['user_id']+sparse_features+list_features]
 
 raw_df = pd.merge(new_df,user,on='user_id')
 
 ## 2.split train test
 
-X,y = raw_df[sparse_features],raw_df[label]-1
+X,y = raw_df[sparse_features+list_features],raw_df[label]-1
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1024)
 del X
