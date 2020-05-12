@@ -1,6 +1,8 @@
 import pandas as pd
+import numpy as np
+from multiprocessing import Process, Manager
 
-from .const import *
+from const import *
 
 
 # test_ad = pd.read_csv(test_ad_path,na_values='\\N')
@@ -104,77 +106,114 @@ user_industry = pd.concat(user_res,axis=1)
 user_industry.columns = columns
 
 
-## 6  :creative_id,ad_id,product_id,advertiser_id
-# 6.1 creative_id
-max_size = 7417
-
-user_res = []
-columns = []
-
-term = 'creative_id'
-click_log[term] = click_log[term].apply(lambda x : x % max_size)
-for i in range(max_size):
-    user_clicks = click_log[click_log[key]==i].groupby('user_id')['click_times'].sum()
-    user_res.append(user_clicks)
-    columns.append(key+"_"+str(i))
+def process_df(user_key,user_ids,user_series):
+    i=0
+    for user_id, group in user_key.groupby(['user_id']):#首先对原始数据进行groupby
+        user_ids.append(user_id)
+        user_series.append(list(group.sort_values(by=['time'])[key]))
+        i+=1
+        if i%50000==0:
+            print(user_id)
 
 
-user_creative_id = pd.concat(user_res,axis=1)
-user_creative_id.columns = columns
+## 6 advertiser_id sequence
+max_size = 26713
+worker = 12
+key = 'advertiser_id'
+user_key = click_log[['user_id','time',key]]
+user_key = user_key[user_key[key].notna()]
+user_key[key] = user_key[key].apply(lambda x : (x%max_size)+1).astype(np.int16)
+user_key_splited = np.array_split(user_key, worker)
 
-# 6.2 ad_id
-max_size = 7417
+manager =  Manager()
+user_ids = manager.list()
+user_series = manager.list()
 
-user_res = []
-columns = []
-
-term = 'ad_id'
-click_log[term] = click_log[term].apply(lambda x : x % max_size)
-for i in range(max_size):
-    user_clicks = click_log[click_log[key]==i].groupby('user_id')['click_times'].sum()
-    user_res.append(user_clicks)
-    columns.append(key+"_"+str(i))
-
-
-user_ad_id = pd.concat(user_res,axis=1)
-user_ad_id.columns = columns
-
-
-# 6.3 product_id
-max_size = 7417
-
-user_res = []
-columns = []
-
-term = 'product_id'
-click_log[term] = click_log[term].apply(lambda x : x % max_size)
-for i in range(max_size):
-    user_clicks = click_log[click_log[key]==i].groupby('user_id')['click_times'].sum()
-    user_res.append(user_clicks)
-    columns.append(key+"_"+str(i))
+processes =[]
+for df in user_key_splited:
+    p = Process(target=process_df, args=(df,user_ids,user_series))
+    p.start()
+    processes.append(p)
 
 
-user_product_id = pd.concat(user_res,axis=1)
-user_product_id.columns = columns
+for p in processes:
+    p.join()
+
+user_advertiser_ids = pd.DataFrame({"index":user_ids,key:user_series})
 
 
-# 6.3 advertiser_id
-max_size = 7417
 
-user_res = []
-columns = []
+# ## 6  :creative_id,ad_id,product_id,advertiser_id
+# # 6.1 creative_id
+# max_size = 7417
 
-term = 'advertiser_id'
-click_log[term] = click_log[term].apply(lambda x : x % max_size)
-for i in range(max_size):
-    user_clicks = click_log[click_log[key]==i].groupby('user_id')['click_times'].sum()
-    user_res.append(user_clicks)
-    columns.append(key+"_"+str(i))
+# user_res = []
+# columns = []
 
-
-user_advertiser_id = pd.concat(user_res,axis=1)
-user_advertiser_id.columns = columns
+# term = 'creative_id'
+# click_log[term] = click_log[term].apply(lambda x : x % max_size)
+# for i in range(max_size):
+#     user_clicks = click_log[click_log[key]==i].groupby('user_id')['click_times'].sum()
+#     user_res.append(user_clicks)
+#     columns.append(key+"_"+str(i))
 
 
-df = pd.join([user_click_times,user_weekend,user_weekday,user_time,user_industry,user_product_category,user_creative_id,
-    user_ad_id,user_advertiser_id,user_product_id])
+# user_creative_id = pd.concat(user_res,axis=1)
+# user_creative_id.columns = columns
+
+# # 6.2 ad_id
+# max_size = 7417
+
+# user_res = []
+# columns = []
+
+# term = 'ad_id'
+# click_log[term] = click_log[term].apply(lambda x : x % max_size)
+# for i in range(max_size):
+#     user_clicks = click_log[click_log[key]==i].groupby('user_id')['click_times'].sum()
+#     user_res.append(user_clicks)
+#     columns.append(key+"_"+str(i))
+
+
+# user_ad_id = pd.concat(user_res,axis=1)
+# user_ad_id.columns = columns
+
+
+# # 6.3 product_id
+# max_size = 7417
+
+# user_res = []
+# columns = []
+
+# term = 'product_id'
+# click_log[term] = click_log[term].apply(lambda x : x % max_size)
+# for i in range(max_size):
+#     user_clicks = click_log[click_log[key]==i].groupby('user_id')['click_times'].sum()
+#     user_res.append(user_clicks)
+#     columns.append(key+"_"+str(i))
+
+
+# user_product_id = pd.concat(user_res,axis=1)
+# user_product_id.columns = columns
+
+
+# # 6.3 advertiser_id
+# max_size = 7417
+
+# user_res = []
+# columns = []
+
+# term = 'advertiser_id'
+# click_log[term] = click_log[term].apply(lambda x : x % max_size)
+# for i in range(max_size):
+#     user_clicks = click_log[click_log[key]==i].groupby('user_id')['click_times'].sum()
+#     user_res.append(user_clicks)
+#     columns.append(key+"_"+str(i))
+
+
+# user_advertiser_id = pd.concat(user_res,axis=1)
+# user_advertiser_id.columns = columns
+
+
+# df = pd.join([user_click_times,user_weekend,user_weekday,user_time,user_industry,user_product_category,user_creative_id,
+#     user_ad_id,user_advertiser_id,user_product_id])
