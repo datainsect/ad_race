@@ -50,7 +50,7 @@ user_click_times = click_log.groupby('user_id')['click_times'].sum()
 
 user_click_times = pd.DataFrame({"user_id":user_click_times.index.values,"total_times":user_click_times.values}).set_index("user_id")
 
-user_click_times['total_times'] = user_click_times['total_times'].astype(np.int16)
+user_click_times['total_times'] = user_click_times['total_times'].fillna(0).astype(np.int16)
 
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : user_click_times finished")
 
@@ -75,7 +75,7 @@ user_weekend = pd.concat(user_res,axis=1)
 user_weekend.columns = columns
 
 for column in columns:
-    user_weekend[column] = user_weekend[column].astype(np.int16)
+    user_weekend[column] = user_weekend[column].fillna(0).astype(np.int16)
 
 df = df.join(user_weekend)
 del user_click_times
@@ -98,7 +98,7 @@ user_weekday = pd.concat(user_res,axis=1)
 user_weekday.columns = columns
 
 for column in columns:
-    user_weekday[column] = user_weekday[column].astype(np.int16)
+    user_weekday[column] = user_weekday[column].fillna(0).astype(np.int16)
 
 df = df.join(user_weekday)
 del user_weekday
