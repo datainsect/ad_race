@@ -54,7 +54,7 @@ class MyMeanPool(Layer):
         return tuple(output_shape)
 
 
-class DeepFM:
+class DeepFMSM:
     def __init__(self,cate_features,list_features,features_num_dict,k=10,list_k =10*20, optimizer=Adam(0.001)):
         self.cate_features = cate_features
         self.list_features = list_features
