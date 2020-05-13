@@ -48,9 +48,7 @@ def myeval(s):
 
 label = 'gender'
 
-# sparse_features = ['total_times','weekend_0','weekend_1','product_category_18','weekday_1','weekday_0','weekday_4','weekday_3','weekday_2','weekday_5','weekday_6','industry_6','product_category_2','product_category_5','industry_319','industry_322','industry_247','industry_54','industry_317','product_category_3','industry_297','industry_238','industry_242','industry_73','product_category_12','industry_88','industry_289','product_category_8','industry_60','industry_248','industry_25','product_category_17','industry_326','industry_246','industry_21','industry_291','industry_5','industry_318','industry_47','industry_296','industry_329','industry_36','industry_40','industry_252','industry_27','industry_26','industry_183','industry_203','industry_202','industry_253','product_category_13','industry_321','industry_288','industry_259','industry_205']
 list_features = [ 'advertiser_id']
-# list_features = [ ]
 
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : started")
 
