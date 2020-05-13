@@ -24,6 +24,7 @@ from keras import backend as K
 from keras.engine.topology import Layer
 import tensorflow as tf
 
+sparse_embedding_size=11
 
 class MyMeanPool(Layer):
     def __init__(self, axis, **kwargs):
@@ -74,7 +75,7 @@ class DeepFM:
             input = Input(shape=(1,),name=feature)
             inputs.append(input)
             # fm embeddings
-            embed = Embedding(self.features_num_dict[feature], self.k, input_length=1, trainable=True)(input)
+            embed = Embedding(sparse_embedding_size, self.k, input_length=1, trainable=True)(input)
             reshape = Reshape((self.k,))(embed)
             field_embedding.append(reshape)
         ####dealing with sparse list input 
