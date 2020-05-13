@@ -21,7 +21,7 @@ from keras.engine.topology import Layer
 from tensorflow.python.framework import graph_util
 from keras.backend.tensorflow_backend import set_session
 from keras.optimizers import Adam
-from tqdm.keras import TqdmCallback
+# from tqdm.keras import TqdmCallback
 
 import time
 from keras.preprocessing.sequence import pad_sequences
