@@ -4,6 +4,7 @@ import math
 
 from const import *
 from utils import *
+
 click_log = pd.read_csv(click_log_path)
 
 
