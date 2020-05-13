@@ -54,7 +54,6 @@ list_features = [ 'advertiser_id']
 
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : started")
 
-
 ## 1. load raw data
 df = pd.read_csv(raw_processed)
 
