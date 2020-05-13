@@ -42,7 +42,7 @@ sparse_features = ['click_times','click_times.1','click_times.2','click_times.3'
 
 # list_features = ['time', 'creative_id', 'ad_id', 'advertiser_id', 'industry','product_id', 'product_category']
 
-list_features = [ 'ad_id','advertiser_id','product_id']
+list_features = [ 'ad_id','advertiser_id']
 
 project = '/home/tione/notebook/'
 
