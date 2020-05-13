@@ -29,6 +29,7 @@ from keras.preprocessing.sequence import pad_sequences
 from dnn.DeepFM import DeepFM
 from metrics.Metrics import Metrics
 from sklearn.model_selection import train_test_split
+from utils import *
 
 batch_size = 32
 epochs = 10
@@ -48,14 +49,7 @@ user_path = project + 'train/user/user.csv'
 user_cwwpi_path = project + 'train/user/user_cwwpi.csv'
 user_sequence_path = project + 'train/user/user_sequence.csv'
 
-
-def myeval(s):
-    l = eval(s)
-    if len(l)==0:
-        l.append(1)
-    return l
-
-## 
+## 0 label
 label = 'gender'
 
 ## 1. load raw data
@@ -115,7 +109,7 @@ print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_test list processed")
 
 ## 4. Define Model, train, predict and evaluate
 
-checkpoint = ModelCheckpoint('models/run_deepfm2.h5', save_weights_only=False, save_best_only=True)
+checkpoint = ModelCheckpoint('models/gender_baseline.h5', save_weights_only=False, save_best_only=True)
 callbacks_list = [checkpoint]
 
 
@@ -125,4 +119,4 @@ model.compile("adam", "binary_crossentropy",metrics=['binary_crossentropy','acc'
 
 history = model.fit(model_input, y_train,batch_size=batch_size, epochs=epochs, verbose=1, shuffle=True,validation_data=(model_output,y_test),callbacks=callbacks_list)
 
-model.save('models/run_deepfm2_final.h5')
+model.save('models/gender_baseline_final.h5')
