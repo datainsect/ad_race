@@ -8,36 +8,36 @@ import time
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :start clean data")
 
 
-test_ad = pd.read_csv(test_ad_path,na_values='\\N')
-test_click_log = pd.read_csv(test_click_log_path,na_values='\\N')
+# test_ad = pd.read_csv(test_ad_path,na_values='\\N')
+# test_click_log = pd.read_csv(test_click_log_path,na_values='\\N')
 
-train_ad = pd.read_csv(train_ad_path,na_values='\\N')
-train_click_log = pd.read_csv(train_click_log_path,na_values='\\N')
-# train_user = pd.read_csv(train_user_path,na_values='\\N')
-
-
-# train_user_id_max = train_click_log.max()
-
-click_log = pd.concat([train_click_log,test_click_log])
-del train_click_log
-del test_click_log
-
-ad = pd.concat([train_ad,test_ad])
-del train_ad
-del test_ad
-
-ad.drop_duplicates( inplace=True)
+# train_ad = pd.read_csv(train_ad_path,na_values='\\N')
+# train_click_log = pd.read_csv(train_click_log_path,na_values='\\N')
+# # train_user = pd.read_csv(train_user_path,na_values='\\N')
 
 
-## 0 process data and join ad
-click_log['click_times'] = click_log.click_times.apply(lambda x : min(x,4))
-click_log['weekday'] = click_log.time.apply(lambda x:x%7)
-click_log['weekend'] = click_log.weekday.apply(lambda x:1 if x<=1 else 0)
-click_log = pd.merge(click_log, ad, on='creative_id',how='left')
+# # train_user_id_max = train_click_log.max()
 
-del ad
+# click_log = pd.concat([train_click_log,test_click_log])
+# del train_click_log
+# del test_click_log
 
-# click_log = pd.read_csv(raw_joined)
+# ad = pd.concat([train_ad,test_ad])
+# del train_ad
+# del test_ad
+
+# ad.drop_duplicates( inplace=True)
+
+
+# ## 0 process data and join ad
+# click_log['click_times'] = click_log.click_times.apply(lambda x : min(x,4))
+# click_log['weekday'] = click_log.time.apply(lambda x:x%7)
+# click_log['weekend'] = click_log.weekday.apply(lambda x:1 if x<=1 else 0)
+# click_log = pd.merge(click_log, ad, on='creative_id',how='left')
+
+# del ad
+
+click_log = pd.read_csv(raw_joined)
 # click_log.to_csv(raw_joined)
 
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : raw_joined finished")
