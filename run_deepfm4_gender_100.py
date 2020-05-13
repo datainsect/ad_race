@@ -117,7 +117,7 @@ print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_test list processed")
 
 ## 4. Define Model, train, predict and evaluate
 
-checkpoint = ModelCheckpoint('models/deepfm4_age.h5', save_weights_only=False, save_best_only=True)
+checkpoint = ModelCheckpoint('models/deepfm4_gender_100.h5', save_weights_only=False, save_best_only=True)
 callbacks_list = [checkpoint]
 
 model = DeepFM(sparse_features, list_features,features_num_dict,k=10,list_k=100).model
@@ -125,4 +125,4 @@ model.compile("adam", "binary_crossentropy",metrics=['binary_crossentropy','acc'
 
 history = model.fit(model_input, y_train,batch_size=batch_size, epochs=epochs, verbose=1, shuffle=True,validation_data=(model_output,y_test),callbacks=callbacks_list)
 
-model.save('models/deepfm4_age_final.h5')
+model.save('models/deepfm4_gender_100.h5')

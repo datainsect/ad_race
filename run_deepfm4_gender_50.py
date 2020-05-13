@@ -21,7 +21,7 @@ from keras.engine.topology import Layer
 from tensorflow.python.framework import graph_util
 from keras.backend.tensorflow_backend import set_session
 from keras.optimizers import Adam
-
+# from tqdm.keras import TqdmCallback
 
 import time
 from keras.preprocessing.sequence import pad_sequences
@@ -33,7 +33,7 @@ from sklearn.model_selection import train_test_split
 
 from const import *
 batch_size = 32
-epochs = 5
+epochs = 1
 max_len = 150
 
 
@@ -46,9 +46,13 @@ def myeval(s):
 
 ## 
 
-label = 'age'
+label = 'gender'
 
+# sparse_features = ['total_times','weekend_0','weekend_1','product_category_18','weekday_1','weekday_0','weekday_4','weekday_3','weekday_2','weekday_5','weekday_6','industry_6','product_category_2','product_category_5','industry_319','industry_322','industry_247','industry_54','industry_317','product_category_3','industry_297','industry_238','industry_242','industry_73','product_category_12','industry_88','industry_289','product_category_8','industry_60','industry_248','industry_25','product_category_17','industry_326','industry_246','industry_21','industry_291','industry_5','industry_318','industry_47','industry_296','industry_329','industry_36','industry_40','industry_252','industry_27','industry_26','industry_183','industry_203','industry_202','industry_253','product_category_13','industry_321','industry_288','industry_259','industry_205']
 list_features = [ 'advertiser_id']
+# list_features = [ ]
+
+print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : started")
 
 ## 1. load raw data
 df = pd.read_csv(raw_processed)
@@ -113,12 +117,12 @@ print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_test list processed")
 
 ## 4. Define Model, train, predict and evaluate
 
-checkpoint = ModelCheckpoint('models/deepfm4.h5', save_weights_only=False, verbose=1, save_best_only=True)
-callbacks_list = [checkpoint] 
+checkpoint = ModelCheckpoint('models/deepfm4_gender_50.h5', save_weights_only=False, save_best_only=True)
+callbacks_list = [checkpoint]
 
 model = DeepFM(sparse_features, list_features,features_num_dict,k=10,list_k=50).model
 model.compile("adam", "binary_crossentropy",metrics=['binary_crossentropy','acc'],)
 
-history = model.fit(model_input, y_train,batch_size=batch_size, epochs=epochs, verbose=2, shuffle=True,validation_data=(model_output,y_test),callbacks=callbacks_list)
+history = model.fit(model_input, y_train,batch_size=batch_size, epochs=epochs, verbose=1, shuffle=True,validation_data=(model_output,y_test),callbacks=callbacks_list)
 
-model.save('models/deepfm4_final.h5')
+model.save('models/deepfm4_gender_50_final.h5')
