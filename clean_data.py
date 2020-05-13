@@ -13,14 +13,19 @@ test_click_log = pd.read_csv(test_click_log_path,na_values='\\N')
 
 train_ad = pd.read_csv(train_ad_path,na_values='\\N')
 train_click_log = pd.read_csv(train_click_log_path,na_values='\\N')
-train_user = pd.read_csv(train_user_path,na_values='\\N')
+# train_user = pd.read_csv(train_user_path,na_values='\\N')
 
 
-train_user_id_max = train_click_log.max()
+# train_user_id_max = train_click_log.max()
 
 click_log = pd.concat([train_click_log,test_click_log])
+del train_click_log
+del test_click_log
 
 ad = pd.concat([train_ad,test_ad])
+del train_ad
+del test_ad
+
 ad.drop_duplicates( inplace=True)
 
 
@@ -29,6 +34,8 @@ click_log['click_times'] = click_log.click_times.apply(lambda x : min(x,4))
 click_log['weekday'] = click_log.time.apply(lambda x:x%7)
 click_log['weekend'] = click_log.weekday.apply(lambda x:1 if x<=1 else 0)
 click_log = pd.merge(click_log, ad, on='creative_id',how='left')
+
+del ad
 
 # click_log = pd.read_csv(raw_joined)
 click_log.to_csv(raw_joined)
@@ -54,6 +61,7 @@ for i in range(click_log[key].min(),click_log[key].max()+1):
     user_weekend_clicks = click_log[click_log[key]==i].groupby('user_id')['click_times'].sum()
     user_res.append(user_weekend_clicks)
     columns.append(key+"_"+str(i))
+    del user_weekend_clicks
 
 
 user_weekend = pd.concat(user_res,axis=1)
@@ -69,6 +77,7 @@ for i in range(click_log[key].min(),click_log[key].max()+1):
     user_clicks = click_log[click_log[key]==i].groupby('user_id')['click_times'].sum()
     user_res.append(user_clicks)
     columns.append(key+"_"+str(i))
+    del user_clicks
 
 
 user_weekday = pd.concat(user_res,axis=1)
@@ -85,6 +94,7 @@ for i in range(click_log[key].min(),click_log[key].max()+1):
     user_clicks = click_log[click_log[key]==i].groupby('user_id')['click_times'].sum()
     user_res.append(user_clicks)
     columns.append(key+"_"+str(i))
+    del user_clicks
 
 
 user_product_category = pd.concat(user_res,axis=1)
@@ -101,6 +111,7 @@ for i in range(int(click_log[key].min()),int(click_log[key].max())+1):
     user_clicks = click_log[click_log[key]==i].groupby('user_id')['click_times'].sum()
     user_res.append(user_clicks)
     columns.append(key+"_"+str(i))
+    del user_clicks
 
 
 user_industry = pd.concat(user_res,axis=1)
@@ -147,8 +158,13 @@ for df in user_key_splited:
 for p in processes:
     p.join()
 
+del user_key_splited
+
 
 user_time = pd.DataFrame({"user_id":list(user_ids),key:list(user_series)}).set_index("user_id")
+
+del user_ids 
+del user_series
 
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : time finished")
 
@@ -175,8 +191,15 @@ for df in user_key_splited:
 for p in processes:
     p.join()
 
+del user_key_splited
+
 
 user_advertiser_ids = pd.DataFrame({"user_id":list(user_ids),key:list(user_series)}).set_index("user_id")
+
+
+del user_ids 
+del user_series
+
 
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : advertiser_id finished")
 
@@ -203,14 +226,29 @@ for df in user_key_splited:
 for p in processes:
     p.join()
 
+del user_key_splited
+
 
 user_product_id = pd.DataFrame({"user_id":list(user_ids),key:list(user_series)}).set_index("user_id")
+
+
+del user_ids 
+del user_series
+
 
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : product_id finished")
 
 
 df = user_click_times.join(user_weekend).join(user_weekday).join(user_product_category).join(user_industry).join(user_time).join(user_advertiser_ids).join(user_product_id)
 
+del user_click_times 
+del user_weekend
+del user_weekday
+del user_product_category
+del user_industry
+del user_time
+del user_advertiser_ids
+del user_product_id
 
 df.to_csv(raw_processed)
 
