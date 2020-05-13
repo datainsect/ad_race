@@ -2,27 +2,15 @@ import pandas  as pd
 import numpy as np
 import math
 
-project = '/home/tione/notebook/'
-
-click_log_path = project +'train/click_log_joined.csv'
+from const import *
+from utils import *
 click_log = pd.read_csv(click_log_path)
 
-def rmnan(x):
-    if not x or len(x)==0:
-        return x
-    return x.replace(', nan','').replace('nan,','').replace('nan','')
+
 
 #np.int16 (-32768 to 32767）
 
 ## 1.process train file
-user_time_path = project + 'train/user/user_time.csv'
-user_creative_id_path = project + 'train/user/user_creative_id.csv'
-user_ad_id_path = project + 'train/user/user_ad_id.csv'
-user_advertiser_id_path = project + 'train/user/user_advertiser_id.csv'
-user_industry_path = project + 'train/user/user_industry.csv'
-user_product_id_path = project + 'train/user/user_product_id.csv'
-user_product_category_path = project + 'train/user/user_product_category.csv'
-
 
 #1.1 time  91 91
 k = 92

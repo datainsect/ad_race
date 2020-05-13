@@ -16,3 +16,23 @@ features_num_dict = {'total_times':9,'weekend_0':9,'weekend_1':8,'product_catego
     'time_len':max_len,'time_size':92,'creative_id_len':max_len,'creative_id_size':26714,'ad_id_len':max_len,'ad_id_size':26714,'advertiser_id_len':max_len,'advertiser_id_size':26714,'industry_len':max_len,'industry_size':336,'product_id_len':max_len,'product_id_size':26714,'product_category_len':max_len,'product_category_size':19,}
 
 
+
+
+
+
+#######
+
+project = '/home/tione/notebook/'
+
+click_log_path = project +'train/click_log_joined.csv'
+
+
+## 1.process train file
+user_time_path = project + 'train/user/user_time.csv'
+user_creative_id_path = project + 'train/user/user_creative_id.csv'
+user_ad_id_path = project + 'train/user/user_ad_id.csv'
+user_advertiser_id_path = project + 'train/user/user_advertiser_id.csv'
+user_industry_path = project + 'train/user/user_industry.csv'
+user_product_id_path = project + 'train/user/user_product_id.csv'
+user_product_category_path = project + 'train/user/user_product_category.csv'
+
