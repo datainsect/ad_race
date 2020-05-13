@@ -89,13 +89,6 @@ model_input = {name: X_train[name].fillna(0).map(lambda x:int(math.log(x+1,2))).
 X_train.drop(sparse_features,axis=1,inplace=True)
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_train sparse processed")
 
-# for feature in list_features:
-#     feature_list =  list(map(myeval, X_train[feature].values))
-#     X_train.drop([feature],axis=1,inplace=True)
-#     print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_train "+ feature +" dropped")
-#     feature_list = pad_sequences(feature_list, maxlen=features_num_dict[feature+"_len"],dtype='int16')
-#     model_input[feature] = feature_list
-#     del feature_list
 
 del X_train
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_train list processed")
@@ -104,14 +97,6 @@ print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_train list processed")
 model_output = {name: X_test[name].fillna(0).map(lambda x:int(math.log(x+1,2))).astype(np.int16) for name in sparse_features}
 X_test.drop(sparse_features,axis=1,inplace=True)
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_test sparse processed")
-
-# for feature in list_features:
-#     feature_list =  list(map(myeval, X_test[feature].values))
-#     X_test.drop([feature],axis=1,inplace=True)
-#     print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_test "+ feature +" dropped")
-#     feature_list = pad_sequences(feature_list, maxlen=features_num_dict[feature+"_len"],dtype='int16')
-#     model_output[feature] = feature_list
-#     del feature_list
 
 
 del X_test

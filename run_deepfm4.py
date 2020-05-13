@@ -73,7 +73,7 @@ raw_df = pd.merge(new_df,user,on='user_id')
 
 X,y = raw_df[sparse_features+list_features],raw_df[label]-1
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1024)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=1024)
 del X
 del y
 del raw_df
