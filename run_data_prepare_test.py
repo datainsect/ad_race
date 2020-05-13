@@ -7,17 +7,8 @@ from utils import *
 
 #np.int16 (-32768 to 32767）
 
+click_log_test = pd.read_csv(click_log_test_path)
 
-
-# 0 make sequence data:
-user_time = click_log_test[['user_id','time']]
-user_ids = []
-user_series = []
-for user_id, group in user_time.groupby(['user_id']):#首先对原始数据进行groupby
-    user_ids.append(user_id)
-    user_series.append(list(group['time'].sort_values()))
-    if user_id%10000==0:
-        print(user_id)
 
 
 ## 1.process test file

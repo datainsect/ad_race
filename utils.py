@@ -8,6 +8,12 @@ def myeval(s):
     return l
 
 
+def eval_with_nan(s):
+    l = eval(rmnan(s))
+    if len(l)==0:
+        l.append(1)
+    return l
+
 def rmnan(x):
     if not x or len(x)==0:
         return x
