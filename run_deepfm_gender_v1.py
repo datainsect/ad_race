@@ -81,7 +81,10 @@ X_train.drop(sparse_features,axis=1,inplace=True)
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_train sparse processed")
 
 for feature in list_features:
-    feature_list =  list(map(myeval, X_train[feature].values))
+    if feature in ['product_id','industry']:
+        feature_list =  list(map(eval_with_nan, X_train[feature].values))
+    else:
+        feature_list =  list(map(myeval, X_train[feature].values))
     X_train.drop([feature],axis=1,inplace=True)
     print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_train "+ feature +" dropped")
     feature_list = pad_sequences(feature_list, maxlen=features_num_dict[feature+"_len"],dtype='int16')
