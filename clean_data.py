@@ -160,6 +160,7 @@ def process_df(user_key,user_ids,user_series):
         series = list(group.sort_values(by=['time'])[key])
         if len(series)==0:
             series = [1]
+        series = '['+','.join(map(str,series))+']'
         user_series.append(series)
         i+=1
         if i%50000==0:
