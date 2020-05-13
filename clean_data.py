@@ -52,6 +52,11 @@ user_click_times = pd.DataFrame({"user_id":user_click_times.index.values,"total_
 
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : user_click_times finished")
 
+df = user_click_times
+
+
+
+
 ####2 user_id weekend
 
 user_res = []
@@ -66,6 +71,10 @@ for i in range(click_log[key].min(),click_log[key].max()+1):
 
 user_weekend = pd.concat(user_res,axis=1)
 user_weekend.columns = columns
+
+df = df.join(user_weekend)
+del user_click_times
+del user_weekend
 
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : user_weekend finished")
 
@@ -82,6 +91,9 @@ for i in range(click_log[key].min(),click_log[key].max()+1):
 
 user_weekday = pd.concat(user_res,axis=1)
 user_weekday.columns = columns
+
+df = df.join(user_weekday)
+del user_weekday
 
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : user_weekday finished")
 
@@ -100,6 +112,9 @@ for i in range(click_log[key].min(),click_log[key].max()+1):
 user_product_category = pd.concat(user_res,axis=1)
 user_product_category.columns = columns
 
+df = df.join(user_product_category)
+del user_product_category
+
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : product_category finished")
 
 ####5 user_id/gender/age on industry
@@ -116,6 +131,9 @@ for i in range(int(click_log[key].min()),int(click_log[key].max())+1):
 
 user_industry = pd.concat(user_res,axis=1)
 user_industry.columns = columns
+
+df = df.join(user_industry)
+del user_industry
 
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : industry finished")
 
@@ -166,6 +184,9 @@ user_time = pd.DataFrame({"user_id":list(user_ids),key:list(user_series)}).set_i
 del user_ids 
 del user_series
 
+df = df.join(user_time)
+del user_time
+
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : time finished")
 
 ## 7 advertiser_id sequence
@@ -199,6 +220,10 @@ user_advertiser_ids = pd.DataFrame({"user_id":list(user_ids),key:list(user_serie
 
 del user_ids 
 del user_series
+
+
+df = df.join(user_advertiser_ids)
+del user_advertiser_ids
 
 
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : advertiser_id finished")
@@ -235,20 +260,10 @@ user_product_id = pd.DataFrame({"user_id":list(user_ids),key:list(user_series)})
 del user_ids 
 del user_series
 
+df = df.join(user_product_id)
+del user_product_id
 
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : product_id finished")
-
-
-df = user_click_times.join(user_weekend).join(user_weekday).join(user_product_category).join(user_industry).join(user_time).join(user_advertiser_ids).join(user_product_id)
-
-del user_click_times 
-del user_weekend
-del user_weekday
-del user_product_category
-del user_industry
-del user_time
-del user_advertiser_ids
-del user_product_id
 
 df.to_csv(raw_processed)
 
