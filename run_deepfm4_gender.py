@@ -33,7 +33,7 @@ from sklearn.model_selection import train_test_split
 
 from const import *
 batch_size = 32
-epochs = 5
+epochs = 1
 max_len = 150
 
 
