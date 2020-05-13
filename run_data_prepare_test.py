@@ -5,22 +5,22 @@ import math
 from const import *
 from utils import *
 
-
-
-click_log = pd.merge(click_log, ad, on='creative_id',how='left')
-
-
-click_log = pd.read_csv(click_log_path)
-
-
-
-
-
-
-
 #np.int16 (-32768 to 32767）
 
-## 1.process train file
+
+
+# 0 make sequence data:
+user_time = click_log_test[['user_id','time']]
+user_ids = []
+user_series = []
+for user_id, group in user_time.groupby(['user_id']):#首先对原始数据进行groupby
+    user_ids.append(user_id)
+    user_series.append(list(group['time'].sort_values()))
+    if user_id%10000==0:
+        print(user_id)
+
+
+## 1.process test file
 
 #1.1 time  91 91
 k = 92

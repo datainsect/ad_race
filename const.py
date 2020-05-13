@@ -24,10 +24,12 @@ features_num_dict = {'total_times':9,'weekend_0':9,'weekend_1':8,'product_catego
 
 project = '/home/tione/notebook/'
 
-click_log_path = project +'train/click_log_joined.csv'
+
 
 
 ## 1. train file
+click_log_path = project +'train/click_log_joined.csv'
+
 user_time_path = project + 'train/user/user_time.csv'
 user_creative_id_path = project + 'train/user/user_creative_id.csv'
 user_ad_id_path = project + 'train/user/user_ad_id.csv'
@@ -37,12 +39,18 @@ user_product_id_path = project + 'train/user/user_product_id.csv'
 user_product_category_path = project + 'train/user/user_product_category.csv'
 
 
+
 ## 2. test file
-user_time_test_path = project + 'train/user/user_time.csv'
-user_creative_id_test_path = project + 'train/user/user_creative_id.csv'
-user_ad_id_test_path = project + 'train/user/user_ad_id.csv'
-user_advertiser_id_test_path = project + 'train/user/user_advertiser_id.csv'
-user_industry_test_path = project + 'train/user/user_industry.csv'
-user_product_id_test_path = project + 'train/user/user_product_id.csv'
-user_product_category_test_path = project + 'train/user/user_product_category.csv'
+
+ad_test_path = project + 'test/raw/ad.csv'
+click_log_test_path = project + 'test/raw/click_log.csv'
+click_log_test_joined = project +'test/click_log_joined.csv'
+
+user_time_test_path = project + 'test/user/user_time.csv'
+user_creative_id_test_path = project + 'test/user/user_creative_id.csv'
+user_ad_id_test_path = project + 'test/user/user_ad_id.csv'
+user_advertiser_id_test_path = project + 'test/user/user_advertiser_id.csv'
+user_industry_test_path = project + 'test/user/user_industry.csv'
+user_product_id_test_path = project + 'test/user/user_product_id.csv'
+user_product_category_test_path = project + 'test/user/user_product_category.csv'
 
