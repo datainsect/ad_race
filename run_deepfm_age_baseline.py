@@ -114,7 +114,7 @@ callbacks_list = [checkpoint,EarlyStopping(monitor='val_loss',patience=0)]
 
 
 model = DeepFM(sparse_features, list_features,features_num_dict,k=10,list_k=100).model
-model.compile("adam", "binary_crossentropy",metrics=['binary_crossentropy','acc'],)
+model.compile("adam", "categorical_crossentropy",metrics=['binary_crossentropy','acc'],)
 
 history = model.fit(model_input, y_train,batch_size=batch_size, epochs=epochs, verbose=1, shuffle=True,validation_data=(model_output,y_test),callbacks=callbacks_list)
 
