@@ -31,7 +31,7 @@ from metrics.Metrics import Metrics
 from sklearn.model_selection import train_test_split
 from utils import *
 
-batch_size = 32
+batch_size = 128
 epochs = 5
 max_len = 150
 
@@ -113,7 +113,7 @@ checkpoint = ModelCheckpoint('models/gender_baseline.h5', save_weights_only=Fals
 callbacks_list = [checkpoint,EarlyStopping(monitor='val_loss',patience=0)]
 
 
-model = DeepFM(sparse_features, list_features,features_num_dict,k=10,list_k=10*20).model
+model = DeepFM(sparse_features, list_features,features_num_dict,k=10,list_k=100).model
 model.compile("adam", "binary_crossentropy",metrics=['binary_crossentropy','acc'],)
 
 history = model.fit(model_input, y_train,batch_size=batch_size, epochs=epochs, verbose=1, shuffle=True,validation_data=(model_output,y_test),callbacks=callbacks_list)
