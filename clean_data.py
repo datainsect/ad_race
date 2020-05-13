@@ -38,7 +38,7 @@ click_log = pd.merge(click_log, ad, on='creative_id',how='left')
 del ad
 
 # click_log = pd.read_csv(raw_joined)
-click_log.to_csv(raw_joined)
+# click_log.to_csv(raw_joined)
 
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : raw_joined finished")
 
