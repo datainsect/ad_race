@@ -3,6 +3,9 @@ import numpy as np
 from multiprocessing import Process, Manager
 
 from const import *
+import time
+
+print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :start clean data")
 
 
 test_ad = pd.read_csv(test_ad_path,na_values='\\N')
@@ -30,6 +33,7 @@ click_log = pd.merge(click_log, ad, on='creative_id',how='left')
 # click_log = pd.read_csv(raw_joined)
 click_log.to_csv(raw_joined)
 
+print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : raw_joined finished")
 
 # Satistics
 
@@ -39,6 +43,7 @@ user_click_times = click_log.groupby('user_id')['click_times'].sum()
 
 user_click_times = pd.DataFrame({"user_id":user_click_times.index.values,"total_times":user_click_times.values}).set_index("user_id")
 
+print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : user_click_times finished")
 
 ####2 user_id weekend
 
@@ -54,6 +59,8 @@ for i in range(click_log[key].min(),click_log[key].max()+1):
 user_weekend = pd.concat(user_res,axis=1)
 user_weekend.columns = columns
 
+print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : user_weekend finished")
+
 ####3 user_id/gender/age on weekday
 user_res = []
 key = 'weekday'
@@ -67,6 +74,7 @@ for i in range(click_log[key].min(),click_log[key].max()+1):
 user_weekday = pd.concat(user_res,axis=1)
 user_weekday.columns = columns
 
+print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : user_weekday finished")
 
 ####4 user_id/gender/age on product_category
 user_res = []
@@ -82,6 +90,7 @@ for i in range(click_log[key].min(),click_log[key].max()+1):
 user_product_category = pd.concat(user_res,axis=1)
 user_product_category.columns = columns
 
+print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : product_category finished")
 
 ####5 user_id/gender/age on industry
 user_res = []
@@ -97,6 +106,7 @@ for i in range(int(click_log[key].min()),int(click_log[key].max())+1):
 user_industry = pd.concat(user_res,axis=1)
 user_industry.columns = columns
 
+print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : industry finished")
 
 ### process sequence function
 
@@ -140,6 +150,7 @@ for p in processes:
 
 user_time = pd.DataFrame({"user_id":list(user_ids),key:list(user_series)}).set_index("user_id")
 
+print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : time finished")
 
 ## 7 advertiser_id sequence
 max_size = 26713
@@ -167,6 +178,7 @@ for p in processes:
 
 user_advertiser_ids = pd.DataFrame({"user_id":list(user_ids),key:list(user_series)}).set_index("user_id")
 
+print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : advertiser_id finished")
 
 ## 8 product id sequence
 max_size = 26713
@@ -194,9 +206,15 @@ for p in processes:
 
 user_product_id = pd.DataFrame({"user_id":list(user_ids),key:list(user_series)}).set_index("user_id")
 
+print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : product_id finished")
+
+
 df = user_click_times.join(user_weekend).join(user_weekday).join(user_product_category).join(user_industry).join(user_time).join(user_advertiser_ids).join(user_product_id)
 
 
+df.to_csv(raw_processed)
+
+print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : raw_processed finished")
 
 
 # df.total_times.quantile([0.2,0.5,0.75,0.9,0.95,0.98,0.99])
