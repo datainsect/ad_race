@@ -52,6 +52,7 @@ label = 'gender'
 list_features = [ 'advertiser_id']
 # list_features = [ ]
 
+print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  : started")
 
 
 ## 1. load raw data
