@@ -27,7 +27,7 @@ project = '/home/tione/notebook/'
 click_log_path = project +'train/click_log_joined.csv'
 
 
-## 1.process train file
+## 1. train file
 user_time_path = project + 'train/user/user_time.csv'
 user_creative_id_path = project + 'train/user/user_creative_id.csv'
 user_ad_id_path = project + 'train/user/user_ad_id.csv'
@@ -35,4 +35,14 @@ user_advertiser_id_path = project + 'train/user/user_advertiser_id.csv'
 user_industry_path = project + 'train/user/user_industry.csv'
 user_product_id_path = project + 'train/user/user_product_id.csv'
 user_product_category_path = project + 'train/user/user_product_category.csv'
+
+
+## 2. test file
+user_time_test_path = project + 'train/user/user_time.csv'
+user_creative_id_test_path = project + 'train/user/user_creative_id.csv'
+user_ad_id_test_path = project + 'train/user/user_ad_id.csv'
+user_advertiser_id_test_path = project + 'train/user/user_advertiser_id.csv'
+user_industry_test_path = project + 'train/user/user_industry.csv'
+user_product_id_test_path = project + 'train/user/user_product_id.csv'
+user_product_category_test_path = project + 'train/user/user_product_category.csv'
 
