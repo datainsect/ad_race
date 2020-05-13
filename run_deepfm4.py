@@ -87,7 +87,7 @@ X_train.drop(sparse_features,axis=1,inplace=True)
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_train sparse processed")
 
 for feature in list_features:
-    feature_list =  list(map(myeval, X_train[feature].values))
+    feature_list =  list(map(myeval, map(str,X_train[feature].values)))
     X_train.drop([feature],axis=1,inplace=True)
     print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_train "+ feature +" dropped")
     feature_list = pad_sequences(feature_list, maxlen=features_num_dict[feature+"_len"],dtype='int16')
@@ -103,7 +103,7 @@ X_test.drop(sparse_features,axis=1,inplace=True)
 print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_test sparse processed")
 
 for feature in list_features:
-    feature_list =  list(map(myeval, X_test[feature].values))
+    feature_list =  list(map(myeval, map(str,X_test[feature].values)))
     X_test.drop([feature],axis=1,inplace=True)
     print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_test "+ feature +" dropped")
     feature_list = pad_sequences(feature_list, maxlen=features_num_dict[feature+"_len"],dtype='int16')
