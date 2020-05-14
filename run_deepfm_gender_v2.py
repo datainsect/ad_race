@@ -115,7 +115,7 @@ print(time.strftime('%Y-%m-%d %H:%M:%S')+ "  :X_test list processed")
 ## 4. Define Model, train, predict and evaluate
 
 checkpoint = ModelCheckpoint('models/gender_v2.h5', save_weights_only=False, save_best_only=True)
-callbacks_list = [checkpoint]
+callbacks_list = [checkpoint,EarlyStopping(monitor='val_acc',patience=0)]
 
 model = DeepFM(sparse_features, list_features,features_num_dict,k=10,list_k=100).model
 model.compile("adam", "binary_crossentropy",metrics=['binary_crossentropy','acc'],)
