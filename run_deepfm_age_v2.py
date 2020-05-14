@@ -54,7 +54,7 @@ user_cwwpi_path = project + 'train/user/user_cwwpi.csv'
 user_sequence_path = project + 'train/user/user_sequence.csv'
 
 ## 0 label
-label = 'gender'
+label = 'age'
 
 ## 1. load raw data
 user = pd.read_csv(user_path)
